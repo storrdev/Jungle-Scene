@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jungle</title>
+	<style>
+		html, body {
+		  width:  100%;
+		  height: 100%;
+		  margin: 0px;
+		}
+		
+		canvas {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="myCanvas">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+c.width = window.innerWidth;
+c.height = window.innerHeight;
+
+var pixelSize = 5;
+
+//Draw sunset sky
+function sunsetSky() {
+	ctx.fillStyle = "#E64C00";
+	ctx.fillRect(0, 0, c.offsetWidth, c.offsetHeight);
+	
+	var x = 0;
+	var y = 0;
+	var skyColors = new Array(
+		"E64C00",
+		"E01B1B",
+		"C70906",
+		"AD312F",
+		"B5310D"
+	);
+	
+	/*var skyColors = new Array(
+		"0D69B5",
+		"14A4BA",
+		"BBEBF2"
+	);*/
+	
+	for (var k = 0; k <= c.offsetHeight / pixelSize; k++) {
+		y = k * pixelSize;
+	
+		for (var i = 0; i <= c.offsetWidth / pixelSize; i++) {
+			x = i * pixelSize;
+			
+			ctx.fillStyle = "#" + skyColors[randomInterval(0, skyColors.length-1)];
+			ctx.fillRect(x, y, pixelSize + 1, pixelSize + 1);
+		}
+	
+	}
+}
+function tree() {
+	var size = parseInt(Math.random() * c.offsetHeight + c.offsetHeight);
+	var x = randomInterval(-50, c.offsetWidth);
+	var y = randomInterval(c.offsetHeight - (c.offsetHeight * .85), c.offsetHeight - (c.offsetHeight * .2));
+	var shadowAmt = randomInterval(-3, -7);
+	var trunkColors = new Array(
+		"63480C",
+		"825900",
+		"5C430C",
+		"1A5904"
+	);
+	var leafColors = new Array(
+		"4EA130",
+		"41873E",
+		"518C12"
+	);
+	
+	// Draw Tree Top
+	var leafHeight = randomInterval(4, 7);
+	for(var i = 0; i <= leafHeight; i++) {
+		var width = randomInterval(25, 50);
+		for(var k = 1; k < width; k++) {
+			x += pixelSize;
+			var color = leafColors[Math.floor(Math.random() * leafColors.length)];
+			leafShadowAmt = Math.floor(shadowAmt/4);
+			color = shadeColor(color, (k * -1) - i);	// Add shadows
+			ctx.fillStyle="#" + color;
+			ctx.fillRect(x, y, pixelSize + 1, pixelSize + 1);
+		}
+		
+		y += pixelSize;
+		if (i == leafHeight) {
+			x = x - width;
+		}
+		else {
+			width += randomInterval(-pixelSize, pixelSize);
+			x = x - width * pixelSize;	// Return to original x position
+		}
+	}
+	
+	// Draw Trunk
+	for(var i = 0; i < size; i++) {
+		var width = randomInterval(4, 6);
+		for(var k = 0; k < width; k++) {
+			x += pixelSize;
+			var color = trunkColors[Math.floor(Math.random() * trunkColors.length)];
+			if (i < 10) {
+				var shadowFromLeaves = 10 - i;
+			}
+			color = shadeColor(color, (k * shadowAmt) - shadowFromLeaves);	// Add shadows
+			ctx.fillStyle="#" + color;
+			ctx.fillRect(x, y, pixelSize + 1, pixelSize + 1);
+		}
+		
+		width += randomInterval(-1, 1);
+		x = x - width * pixelSize;	// Return to original x position
+		y += pixelSize;
+		
+		if (y > c.offsetHeight) {
+			return;
+		}
+	}
+}
+
+sunsetSky();
+
+//var nTrees = Math.floor((Math.random() * 100) + 50);
+nTrees = 100;
+
+for(var t=0; t < nTrees; t++) {
+	tree();
+}
+
+function randomInterval(from,to)
+{
+    return Math.floor(Math.random()*(to-from+1)+from);
+}
+
+function shadeColor(color, percent) {   
+    var num = parseInt(color,16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) + amt,
+    B = (num >> 8 & 0x00FF) + amt,
+    G = (num & 0x0000FF) + amt;
+    return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+}
+
+</script>
+
+</body>
+</html>
