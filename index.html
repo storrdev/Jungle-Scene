@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-  <title>Jungle</title>
+	<title>Jungle</title>
 	<style>
 		html, body {
 		  width:  100%;
@@ -36,20 +36,21 @@ function sunsetSky() {
 	
 	var x = 0;
 	var y = 0;
-	var skyColors = new Array(
+	/*var skyColors = new Array(
 		"E64C00",
 		"E01B1B",
 		"C70906",
 		"AD312F",
 		"B5310D"
-	);
+	);*/
 	
-	/*var skyColors = new Array(
+	var skyColors = new Array(
 		"0D69B5",
 		"14A4BA",
 		"BBEBF2"
-	);*/
+	);
 	
+	//Draw Sky to fill entire canvas
 	for (var k = 0; k <= c.offsetHeight / pixelSize; k++) {
 		y = k * pixelSize;
 	
@@ -66,6 +67,8 @@ function tree() {
 	var size = parseInt(Math.random() * c.offsetHeight + c.offsetHeight);
 	var x = randomInterval(-50, c.offsetWidth);
 	var y = randomInterval(c.offsetHeight - (c.offsetHeight * .85), c.offsetHeight - (c.offsetHeight * .2));
+	x = pixelSize * Math.floor(x/pixelSize);
+	y = pixelSize * Math.floor(y/pixelSize);
 	var shadowAmt = randomInterval(-3, -7);
 	var trunkColors = new Array(
 		"63480C",
@@ -80,16 +83,18 @@ function tree() {
 	);
 	
 	// Draw Tree Top
-	var leafHeight = randomInterval(4, 7);
+	//var leafHeight = randomInterval(4, 7);
+	var leafHeight = randomInterval(20/pixelSize, 35/pixelSize);
 	for(var i = 0; i <= leafHeight; i++) {
-		var width = randomInterval(25, 50);
+		var width = randomInterval(125/pixelSize, 250/pixelSize);
+		width = pixelSize * Math.floor(width/pixelSize);	//Keeps in line with the pixel grid
 		for(var k = 1; k < width; k++) {
 			x += pixelSize;
 			var color = leafColors[Math.floor(Math.random() * leafColors.length)];
 			leafShadowAmt = Math.floor(shadowAmt/4);
 			color = shadeColor(color, (k * -1) - i);	// Add shadows
 			ctx.fillStyle="#" + color;
-			ctx.fillRect(x, y, pixelSize + 1, pixelSize + 1);
+			ctx.fillRect(x, y, pixelSize , pixelSize);
 		}
 		
 		y += pixelSize;
@@ -104,7 +109,7 @@ function tree() {
 	
 	// Draw Trunk
 	for(var i = 0; i < size; i++) {
-		var width = randomInterval(4, 6);
+		var width = randomInterval(20/pixelSize, 30/pixelSize);
 		for(var k = 0; k < width; k++) {
 			x += pixelSize;
 			var color = trunkColors[Math.floor(Math.random() * trunkColors.length)];
@@ -113,7 +118,7 @@ function tree() {
 			}
 			color = shadeColor(color, (k * shadowAmt) - shadowFromLeaves);	// Add shadows
 			ctx.fillStyle="#" + color;
-			ctx.fillRect(x, y, pixelSize + 1, pixelSize + 1);
+			ctx.fillRect(x, y, pixelSize, pixelSize);
 		}
 		
 		width += randomInterval(-1, 1);
@@ -129,7 +134,7 @@ function tree() {
 sunsetSky();
 
 //var nTrees = Math.floor((Math.random() * 100) + 50);
-nTrees = 100;
+nTrees = 30;
 
 for(var t=0; t < nTrees; t++) {
 	tree();
